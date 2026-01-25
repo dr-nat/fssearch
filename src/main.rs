@@ -1,5 +1,4 @@
-use std::fs;
-use std::fs::read_dir;
+//search from current directory(.)
 use std::error::Error;
 use std::env;
 
@@ -24,27 +23,20 @@ fn paths() -> Result<FilePaths, Box<dyn Error>>{
     Ok(FilePaths{ file: first_arg, file_path: second_arg })
 }
 
-fn search(args: &FilePaths) -> Result<Vec<String>, Box<dyn Error>> {
-    let arguments = fs::read_dir(&args.file_path)?;
+fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
+    let directory = args.file_path.read_dir();
 
-    let mut file_names = Vec::new();
-
-    for files in arguments {
-
+    for files in directory {
         if let Ok(file) = files {
-            let name = file.file_name();
-            
-            println!("checking: {:?}", &name);
+            let file_name = file.file_name();
 
-            if name.to_string_lossy() == args.file {
-                file_names.push(name.to_string_lossy().into_owned());
-
-                println!("{:?}", name);
+            if file_name == args.file {
+                 file.read_to_string();  
+                    file.path()?;
             }
         }
     }
-
-    Ok(file_names)
+    Ok(())
 
 }
 
