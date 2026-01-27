@@ -30,12 +30,21 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
     for files in directory {
         
         if let Ok(entry) = files {
-            let file_name = entry. file_name();
+            let file_name = &entry. file_name();
             
             if file_name.to_string_lossy().into_owned() == args.file {
                 println!("{:?}", file_name);
-            }
+            } else if entry.metadata()?.is_dir() {
+                let sub_dir = entry.path();
+                    
+                let sub_args = FilePaths {
+                    file: sub_dir.to_string_lossy().into_owned(),
+                    file_path: args.file_path.clone(),
+                };
 
+                search(&sub_args)?;
+            }
+                //println!("{}", )
         }
     }
     Ok(())
