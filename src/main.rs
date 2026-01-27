@@ -1,4 +1,5 @@
 //search from current directory(.)
+use std::fs;
 use std::error::Error;
 use std::env;
 
@@ -8,7 +9,7 @@ struct FilePaths {
 }
 
 
-fn paths() -> Result<FilePaths, Box<dyn Error>>{
+fn entry_paths() -> Result<FilePaths, Box<dyn Error>>{
     let args: Vec<String> = env::args().collect();
     
     if args.len() < 2 {
@@ -24,26 +25,22 @@ fn paths() -> Result<FilePaths, Box<dyn Error>>{
 }
 
 fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
-    let directory = args.file_path.read_dir();
+    let directory = fs::read_dir(&args.file_path)?;
 
     for files in directory {
-        if let Ok(file) = files {
-            let file_name = file.file_name();
+        
+        if let Ok(entry) = files {
+            let _ = entry.metadata();
+            println!("{:?}", entry.path());
 
-            if file_name == args.file {
-                 file.read_to_string();  
-                    file.path()?;
-            }
         }
     }
     Ok(())
-
 }
 
 
-
 fn main() {
-    let result = match paths() {
+    let result = match entry_paths() {
         Ok(file) => file,
         Err(e) => {
             eprintln!("Error: {}", e);
