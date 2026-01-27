@@ -31,7 +31,11 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
         
         if let Ok(entry) = files {
             let file_name = &entry. file_name();
+            let file_metadata = &entry.metadata()?;
             
+            let file_type = file_metadata.file_type();
+
+            println!("{:?}", file_type);
             if file_name.to_string_lossy().into_owned() == args.file {
                 println!("{:?}", file_name);
             } else if entry.metadata()?.is_dir() {
@@ -62,5 +66,5 @@ fn main() {
     
     let file = search(&result);
 
-    println!("searching for {:?}", file);
+    println!("{:?}", file);
 }
