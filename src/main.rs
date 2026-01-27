@@ -33,9 +33,20 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
             let file_name = &entry. file_name();
             let file_metadata = &entry.metadata()?;
             
-            let file_type = file_metadata.file_type();
+            if file_metadata.is_file() {
+                println!("{:?}", &file_metadata.file_type());
+            }
 
-            println!("{:?}", file_type);
+            if file_metadata.is_file() {
+                println!("{:?}", &file_metadata.len());
+            }
+            if file_metadata.is_file() {
+                println!("{:?}", &file_metadata.modified());
+            }
+            if file_metadata.is_file() {
+                println!("{:?}", &file_metadata.permissions());
+            }
+
             if file_name.to_string_lossy().into_owned() == args.file {
                 println!("{:?}", file_name);
             } else if entry.metadata()?.is_dir() {
