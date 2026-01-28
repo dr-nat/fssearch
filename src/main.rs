@@ -59,7 +59,9 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
 
                 search(&sub_args)?;
             }
-                //println!("{}", )
+            let path_buf = &entry.path();
+            let file_contents = fs::read_to_string(path_buf);
+            println!("{:?}", file_contents);
         }
     }
     Ok(())
