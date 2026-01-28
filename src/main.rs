@@ -1,67 +1,80 @@
-//search from current directory(.)
-use std::fs;
-use std::error::Error;
-use std::env;
+//search from current directory(.) 
+use std::fs; 
+use std::error::Error; 
+use std::env; 
+struct FilePaths { 
+    file: String, 
+    file_path: String, 
+} 
 
-struct FilePaths {
-    file: String,
-    file_path: String,
-}
-
-
-fn entry_paths() -> Result<FilePaths, Box<dyn Error>>{
-    let args: Vec<String> = env::args().collect();
+fn entry_paths() -> Result<FilePaths, Box<dyn Error>>{ 
+    let args: Vec<String> = env::args().collect(); 
+    if args.len() < 2 { 
+        return Err(format!("No file paths were provided").into()) 
+    } else if args.len()< 3 { 
+            return Err(format!("Only one argument was provided").into()) 
+        
+    } 
     
-    if args.len() < 2 {
-        return Err(format!("No file paths were provided").into())
-    } else if args.len()< 3 {
-        return Err(format!("Only one argument was provided").into())
-    }
-    let first_arg = args[1].clone();
-    let second_arg = args[2].clone();
+    let first_arg = args[1].clone(); 
+
+    let second_arg = args[2].clone(); 
+
+    Ok(FilePaths{ file: first_arg, file_path: second_arg }) 
+} 
 
 
-    Ok(FilePaths{ file: first_arg, file_path: second_arg })
-}
+fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> { 
+    let directory = fs::read_dir(&args.file_path)?; 
 
-fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
-    let directory = fs::read_dir(&args.file_path)?;
+    let mut search_tracker = false; 
 
-    let mut search_tracker = false;
+    for files in directory { 
 
-    for files in directory {
-        
-        if let Ok(entry) = files {
-            let file_name = &entry. file_name();
-        
-            //Implementing the search functionality(The Search engine).
+        if let Ok(entry) = files { 
+            let file_name = &entry. file_name(); 
 
-            if file_name.to_string_lossy().into_owned() == args.file {
+            //Implementing the search functionality(The Search engine). 
 
-                search_tracker = true;
+            if file_name.to_string_lossy().into_owned() == args.file { 
 
-                println!("{:?}", file_name);
+                search_tracker = true; 
 
-                let file_metadata = &entry.metadata()?;
+                println!("\n{:?}", file_name); 
+
+                let file_metadata = &entry.metadata()?; 
+
+                if file_metadata.is_file() { 
+
+                    println!("\n{:?}", &file_metadata.file_type()); 
+                } 
+
+                if file_metadata.is_file() { 
+                    println!("\n{:?}", &file_metadata.len()); 
+
+                } 
 
                 if file_metadata.is_file() {
-                    println!("{:?}", &file_metadata.file_type());
-                }
+                     println!("\n{:?}", &file_metadata.modified()?); 
 
-                if file_metadata.is_file() {
-                    println!("{:?}", &file_metadata.len());
-                }
-                if file_metadata.is_file() {
-                    println!("{:?}", &file_metadata.modified()?);
-                }
-                if file_metadata.is_file() {
-                    println!("{:?}", &file_metadata.permissions());
-                }
+               } 
 
-                let path_buf = &entry.path();
-                let file_contents = fs::read_to_string(path_buf)?;
-                println!("{:?}", file_contents);
+               if file_metadata.is_file() { 
+                   println!("\n{:?}", &file_metadata.permissions()); 
 
+               } 
+
+               if file_metadata.is_file() { 
+
+                   println!("\n{:?}", &file_metadata.accessed()?); 
+
+              } 
+
+              let path_buf = &entry.path(); 
+
+              let file_contents = fs::read_to_string(path_buf)?; 
+
+              println!("\n{:?}", file_contents);
 
             } else if entry.metadata()?.is_dir() {
                 let sub_dir = entry.path();
