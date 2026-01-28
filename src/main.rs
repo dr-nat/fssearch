@@ -31,24 +31,33 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
         
         if let Ok(entry) = files {
             let file_name = &entry. file_name();
-            let file_metadata = &entry.metadata()?;
-            
-            if file_metadata.is_file() {
-                println!("{:?}", &file_metadata.file_type());
-            }
-
-            if file_metadata.is_file() {
-                println!("{:?}", &file_metadata.len());
-            }
-            if file_metadata.is_file() {
-                println!("{:?}", &file_metadata.modified());
-            }
-            if file_metadata.is_file() {
-                println!("{:?}", &file_metadata.permissions());
-            }
+        
+            //Implementing the search functionality(The Search engine).
 
             if file_name.to_string_lossy().into_owned() == args.file {
                 println!("{:?}", file_name);
+
+                let file_metadata = &entry.metadata()?;
+
+                if file_metadata.is_file() {
+                    println!("{:?}", &file_metadata.file_type());
+                }
+
+                if file_metadata.is_file() {
+                    println!("{:?}", &file_metadata.len());
+                }
+                if file_metadata.is_file() {
+                    println!("{:?}", &file_metadata.modified());
+                }
+                if file_metadata.is_file() {
+                    println!("{:?}", &file_metadata.permissions());
+                }
+
+                let path_buf = &entry.path();
+                let file_contents = fs::read_to_string(path_buf);
+                println!("{:?}", file_contents);
+
+
             } else if entry.metadata()?.is_dir() {
                 let sub_dir = entry.path();
                     
@@ -59,11 +68,9 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
 
                 search(&sub_args)?;
             }
-            let path_buf = &entry.path();
-            let file_contents = fs::read_to_string(path_buf);
-            println!("{:?}", file_contents);
         }
     }
+            
     Ok(())
 }
 
