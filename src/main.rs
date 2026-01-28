@@ -70,6 +70,10 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
 
               } 
 
+              if file_metadata.is_file() {
+                  println!("\n{:?}", &file_metadata.created()?);
+              }
+
               let path_buf = &entry.path(); 
 
               let file_contents = fs::read_to_string(path_buf)?; 
