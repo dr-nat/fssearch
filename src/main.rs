@@ -52,14 +52,14 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
                     println!("{:?}", &file_metadata.len());
                 }
                 if file_metadata.is_file() {
-                    println!("{:?}", &file_metadata.modified());
+                    println!("{:?}", &file_metadata.modified()?);
                 }
                 if file_metadata.is_file() {
                     println!("{:?}", &file_metadata.permissions());
                 }
 
                 let path_buf = &entry.path();
-                let file_contents = fs::read_to_string(path_buf);
+                let file_contents = fs::read_to_string(path_buf)?;
                 println!("{:?}", file_contents);
 
 
@@ -93,7 +93,12 @@ fn main() {
         }
     };
     
-    let file = search(&result);
+    let file = search(&result); 
 
-    println!("{:?}", file);
+    match &file {
+        Ok(_) => {},
+        Err(err) => {
+            eprintln!("Error: {}", err);
+        }
+    }
 }
