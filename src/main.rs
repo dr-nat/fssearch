@@ -27,6 +27,8 @@ fn entry_paths() -> Result<FilePaths, Box<dyn Error>>{
 fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
     let directory = fs::read_dir(&args.file_path)?;
 
+    let mut search_tracker = false;
+
     for files in directory {
         
         if let Ok(entry) = files {
@@ -35,6 +37,9 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
             //Implementing the search functionality(The Search engine).
 
             if file_name.to_string_lossy().into_owned() == args.file {
+
+                search_tracker = true;
+
                 println!("{:?}", file_name);
 
                 let file_metadata = &entry.metadata()?;
@@ -67,8 +72,12 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
                 };
 
                 search(&sub_args)?;
-            }
+            } 
         }
+    }     
+
+    if search_tracker == false {
+        println!("File now found.");
     }
             
     Ok(())
