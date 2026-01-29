@@ -1,4 +1,5 @@
 //search from current directory(.) 
+use chrono::prelude::*;
 use std::fs; 
 use std::error::Error; 
 use std::env; 
@@ -55,7 +56,10 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
                 } 
 
                 if file_metadata.is_file() {
-                     println!("\n{:?}", &file_metadata.modified()?); 
+                     let modified_time = &file_metadata.modified()?;
+
+                     let modified: DateTime<Local> = (*modified_time).into();
+                     println!("\nModified_time {}", modified.format("%Y-%m-%d %H:%M:%S")); 
 
                } 
 
