@@ -55,6 +55,7 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
 
                 } 
 
+                // use of the chrono time crate to convert sytem time to human readable date time.
                 if file_metadata.is_file() {
                      let modified_time = &file_metadata.modified()?;
 
@@ -70,7 +71,10 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
 
                if file_metadata.is_file() { 
 
-                   println!("\n{:?}", &file_metadata.accessed()?); 
+                   let accessed_time = &file_metadata.accessed()?;
+
+                   let access: DateTime<Local> = (*accessed_time).into(); 
+                   println!("\nAccessed_time {}", access.format("%Y-%m-%d %H:%M:%S")); 
 
               } 
 
