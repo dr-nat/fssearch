@@ -1,4 +1,5 @@
 //search from current directory(.) 
+use bytesize::ByteSize;
 use chrono::prelude::*;
 use std::fs; 
 use std::error::Error; 
@@ -41,7 +42,7 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
 
                 search_tracker = true; 
 
-                println!("\n{:?}", file_name); 
+                println!("\nFile_name: {:?}", file_name); 
 
                 let file_metadata = &entry.metadata()?; 
 
@@ -51,8 +52,8 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
                 } 
 
                 if file_metadata.is_file() { 
-                    println!("\n{:?}", &file_metadata.len()); 
-
+                    let file_size = &file_metadata.len();
+                    println!("\nFile_size: {}", ByteSize(*file_size)); 
                 } 
 
                 // use of the chrono time crate to convert sytem time to human readable date time.
