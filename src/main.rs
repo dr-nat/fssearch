@@ -60,7 +60,7 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
                      let modified_time = &file_metadata.modified()?;
 
                      let modified: DateTime<Local> = (*modified_time).into();
-                     println!("\nModified_time {}", modified.format("%Y-%m-%d %H:%M:%S")); 
+                     println!("\nModified_time: {}", modified.format("%Y-%m-%d %H:%M:%S")); 
 
                } 
 
@@ -74,12 +74,16 @@ fn search(args: &FilePaths) -> Result<(), Box<dyn Error>> {
                    let accessed_time = &file_metadata.accessed()?;
 
                    let access: DateTime<Local> = (*accessed_time).into(); 
-                   println!("\nAccessed_time {}", access.format("%Y-%m-%d %H:%M:%S")); 
+                   println!("\nAccessed_time: {}", access.format("%Y-%m-%d %H:%M:%S")); 
 
               } 
 
               if file_metadata.is_file() {
-                  println!("\n{:?}", &file_metadata.created()?);
+                  let creation_time = &file_metadata.created()?;
+
+                  let created_time: DateTime<Local> = (*creation_time).into();
+
+                  println!("\nCreated on: {}", created_time.format("%Y-%m-%d %H:%M:%S"));
               }
 
               let path_buf = &entry.path(); 
